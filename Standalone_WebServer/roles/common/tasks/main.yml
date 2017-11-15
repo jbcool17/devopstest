@@ -1,0 +1,11 @@
+---
+  - name: Yum Update
+    yum:
+      name: '*'
+      state: latest
+  - name: Yum Install Dependencies
+    yum: pkg={{item}} state=installed
+    with_items:
+      - epel-release
+  - name: Yum Clean
+    command: yum clean all

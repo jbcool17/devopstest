@@ -1,0 +1,41 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+BOX_IMAGE = "centos/7"
+NODE_COUNT = 3
+MACHINES = ['load-balancer','ws1', 'ws2', 'ws3']
+Vagrant.configure("2") do |config|
+
+  config.vm.define MACHINES[0] do |subconfig|
+    subconfig.vm.box = BOX_IMAGE
+    subconfig.vm.hostname = MACHINES[0]
+    subconfig.vm.network :private_network, ip: "192.168.50.100"
+
+    subconfig.vm.provision "ansible" do |ansible|
+      ansible.playbook = "loadbalancer.yml"
+      ansible.become = true
+    end
+  end
+
+  (1..NODE_COUNT).each do |i|
+    config.vm.define "#{MACHINES[i]}" do |subconfig|
+      subconfig.vm.box = BOX_IMAGE
+      subconfig.vm.hostname = "#{MACHINES[i]}"
+      subconfig.vm.network :private_network, ip: "192.168.50.#{i + 100}"
+
+      subconfig.vm.provision "ansible" do |ansible|
+        ansible.playbook = "webserver.yml"
+        ansible.become = true
+      end
+      # subconfig.vm.provision "file", source: "./configs", destination: "/tmp/configs"
+      # subconfig.vm.provision "file", source: "./site", destination: "/tmp/site"
+      # subconfig.vm.provision "file", source: "./setup-script", destination: "/tmp/setup-script"
+      #
+      # subconfig.vm.provision "shell", inline: <<-SHELL
+      #   chmod 700 /tmp/setup-script
+      #   /tmp/setup-script
+      #
+      # SHELL
+    end
+end
+end
