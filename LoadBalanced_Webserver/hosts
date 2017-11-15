@@ -1,7 +1,7 @@
 [loadbalancer]
-192.168.50.100
+192.168.50.100 ansible_connection=ssh ansible_user=vagrant ansible_ssh_private_key_file=./.vagrant/machines/load-balancer/virtualbox/private_key
 
 [webservers]
-192.168.50.100
-192.168.50.101
-192.168.50.102
+192.168.50.101 ansible_connection=ssh ansible_user=vagrant ansible_ssh_private_key_file=./.vagrant/machines/ws1/virtualbox/private_key
+192.168.50.102 ansible_connection=ssh ansible_user=vagrant ansible_ssh_private_key_file=./.vagrant/machines/ws2/virtualbox/private_key
+192.168.50.103 ansible_connection=ssh ansible_user=vagrant ansible_ssh_private_key_file=./.vagrant/machines/ws3/virtualbox/private_key

@@ -27,7 +27,7 @@
   - name: SSL Directory
     file: path=/etc/ssl/private state=directory owner=root group=root mode=700
   - name: Openssl
-    command: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt -subj "/C=US/ST=New York/L=New York/O=Global Security/OU=IT Department/CN=192.168.50.100"
+    command: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt -subj "/C=US/ST=New York/L=New York/O=Global Security/OU=IT Department/CN={{ vm_ip }}"
   - name: Dhparam
     command: openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
   - copy: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=644
