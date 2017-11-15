@@ -22,7 +22,7 @@
 - View site at: http://192.168.50.100
 - Use ```destroyandrebuild``` to Stop and Rebuild VM to test out new changes
 
-## Ansible Only for Remote Server Ddeployment
+## Ansible Only for Remote Server Deployment
 - vagrant up --no-provision
 - Update ansible playbook files 'hosts' field. Change 'all' to reflect correct group name
 - Standalone_WebServer: ```ansible-playbook -i hosts webserver.yml ```
