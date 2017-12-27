@@ -36,6 +36,18 @@
       - { src: './files/lb-configs/http.conf', dest: '/etc/nginx/conf.d/http.conf'}
       - { src: './files/lb-configs/https.conf', dest: '/etc/nginx/conf.d/https.conf'}
       - { src: './files/lb-configs/upstream.conf', dest: '/etc/nginx/conf.d/upstream.conf'}
+  - name: Setup Site
+    file: path=/var/www/portfolio state=directory owner=root group=root mode=755
+  - copy:
+      src: "{{ item }}"
+      dest: /var/www/portfolio
+      owner: root
+      group: root
+      mode: 0644
+    with_fileglob:
+        - ./files/site/*
+  - name: SELinux
+    command: setsebool -P httpd_can_network_connect 1
   - name: Restart Nginx
     systemd:
       state: restarted
