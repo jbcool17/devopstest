@@ -1,0 +1,66 @@
+.welcome {
+  margin-bottom: -30px;
+}
+
+.about {
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  padding: 10px 0px 10px 0px;
+  text-align: center;
+}
+a {
+  text-decoration: none !important;
+}
+
+ul {
+  overflow-y: scroll !important;
+  height: 200px !important;
+}
+
+#style-2::-webkit-scrollbar-track
+{
+  
+	background-color: #F5F5F5;
+}
+
+#style-2::-webkit-scrollbar
+{
+	width: 12px;
+	background-color: #F5F5F5;
+}
+
+#style-2::-webkit-scrollbar-thumb
+{
+
+	background-color: black;
+
+}
+
+
+li {
+  list-style: none;
+  padding: 10px;
+  margin-bottom: 5px;
+  color: black;
+
+}
+li a:hover {
+  text-decoration: none !important;
+  color: white;
+}
+li:hover {
+  background: deepskyblue;
+}
+
+.header-icons {
+  font-size: 3em;
+}
+.header-icons i:hover {
+  color: deepskyblue;
+}
+.footer-icons {
+  font-size: 1em;
+}
+.footer-icons i:hover {
+  color: deepskyblue;
+}

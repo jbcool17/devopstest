@@ -1,0 +1,25 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+BOX_IMAGE = "centos/7"
+NODE_COUNT = 3
+MACHINES = ['load-balancer','ws1', 'ws2', 'ws3']
+Vagrant.configure("2") do |config|
+
+  config.vm.define MACHINES[0] do |subconfig|
+    subconfig.vm.box = BOX_IMAGE
+    subconfig.vm.hostname = MACHINES[0]
+    subconfig.vm.network :private_network, ip: "192.168.50.100"
+
+    subconfig.vm.provision "ansible" do |ansible|
+      ansible.playbook = "loadbalancer.yml"
+      ansible.become = true
+    end
+
+    subconfig.vm.provision "docker" do |docker|
+      docker.run MACHINES[1], args: "-p 127.0.0.1:8081:80 --restart=always", image: "nginx"
+      docker.run MACHINES[2], args: "-p 127.0.0.1:8082:80 --restart=always", image: "nginx"
+      docker.run MACHINES[3], args: "-p 127.0.0.1:8083:80 --restart=always", image: "nginx"
+    end
+  end
+end
