@@ -1,0 +1,29 @@
+---
+  - name: Reload Firewall
+    command: firewall-cmd --reload
+  - name: SSL Directory
+    file: path=/etc/ssl/private state=directory owner=root group=root mode=700
+  - name: Docker Requirements
+    command: yum install -y yum-utils device-mapper-persistent-data lvm2
+  - name: Setup Repo
+    command: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  - name: Install Docker CE
+    command: yum install -y docker-ce
+  - name: Start Docker
+    systemd:
+      state: started
+      daemon_reload: yes
+      name: docker
+      enabled: True
+  - name: docker test
+    command: docker run hello-world
+  - name: setup static site container - ws1
+    command: docker run -d --name=ws1 -p 127.0.0.1:8081:80 --restart=always -v /var/www/portfolio:/usr/share/nginx/html nginx:alpine
+  - name: setup static site container - ws2
+    command: docker run -d --name=ws2 -p 127.0.0.1:8082:80 --restart=always -v /var/www/portfolio:/usr/share/nginx/html nginx:alpine
+  - name: setup static site container - ws3
+    command: docker run -d --name=ws3 -p 127.0.0.1:8083:80 --restart=always -v /var/www/portfolio:/usr/share/nginx/html nginx:alpine
+  - name: Restart Nginx
+    systemd:
+      state: restarted
+      name: nginx

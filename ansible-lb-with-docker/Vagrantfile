@@ -1,0 +1,28 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+BOX_IMAGE = "centos/7"
+NODE_COUNT = 3
+MACHINES = ['load-balancer','ws1', 'ws2', 'ws3', 'ws4', 'ws5', 'ws6']
+Vagrant.configure("2") do |config|
+
+  config.vm.define MACHINES[0] do |subconfig|
+    subconfig.vm.box = BOX_IMAGE
+    subconfig.vm.hostname = MACHINES[0]
+    subconfig.vm.network :private_network, ip: "192.168.50.100"
+
+    subconfig.vm.provision "ansible" do |ansible|
+      ansible.playbook = "loadbalancer.yml"
+      ansible.become = true
+    end
+
+    # subconfig.vm.provision "docker" do |docker|
+    #   docker.run MACHINES[1], args: "-p 127.0.0.1:8081:80 --restart=always -v /var/www/portfolio:/usr/share/nginx/html", image: "nginx:alpine"
+    #   docker.run MACHINES[2], args: "-p 127.0.0.1:8082:80 --restart=always -v /var/www/portfolio:/usr/share/nginx/html", image: "nginx:alpine"
+    #   docker.run MACHINES[3], args: "-p 127.0.0.1:8083:80 --restart=always -v /var/www/portfolio:/usr/share/nginx/html", image: "nginx:alpine"
+    #   docker.run MACHINES[4], args: "-p 127.0.0.1:8084:80 --restart=always -v /var/www/portfolio:/usr/share/nginx/html", image: "nginx:alpine"
+    #   docker.run MACHINES[5], args: "-p 127.0.0.1:8085:80 --restart=always -v /var/www/portfolio:/usr/share/nginx/html", image: "nginx:alpine"
+    #   docker.run MACHINES[6], args: "-p 127.0.0.1:8086:80 --restart=always -v /var/www/portfolio:/usr/share/nginx/html", image: "nginx:alpine"
+    # end
+  end
+end

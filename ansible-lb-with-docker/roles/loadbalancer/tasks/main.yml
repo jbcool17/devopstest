@@ -1,0 +1,54 @@
+---
+  - name: Yum Install Nginx
+    yum:
+      name: nginx
+      state: present
+  - name: Startup & Enable Nginx
+    systemd:
+        state: started
+        daemon_reload: yes
+        name: nginx
+        enabled: True
+  - name: Setup Firewall
+    systemd:
+      state: started
+      name: firewalld
+      enabled: True
+  - firewalld:
+      service: https
+      permanent: true
+      state: enabled
+  - firewalld:
+      service: http
+      permanent: true
+      state: enabled
+  - name: Reload Firewall
+    command: firewall-cmd --reload
+  - name: SSL Directory
+    file: path=/etc/ssl/private state=directory owner=root group=root mode=700
+  - name: Openssl
+    command: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt -subj "/C=US/ST=New York/L=New York/O=Global Security/OU=IT Department/CN={{ vm_ip }}"
+  - name: Dhparam
+    command: openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+  - copy: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=644
+    with_items:
+      - { src: './files/lb-configs/nginx.conf', dest: '/etc/nginx/nginx.conf'}
+      - { src: './files/lb-configs/http.conf', dest: '/etc/nginx/conf.d/http.conf'}
+      - { src: './files/lb-configs/https.conf', dest: '/etc/nginx/conf.d/https.conf'}
+      - { src: './files/lb-configs/upstream.conf', dest: '/etc/nginx/conf.d/upstream.conf'}
+  - name: Setup Site
+    file: path=/var/www/portfolio state=directory owner=root group=root mode=755
+  - copy:
+      src: "{{ item }}"
+      dest: /var/www/portfolio
+      owner: root
+      group: root
+      mode: 0644
+    with_fileglob:
+        - ./files/site/*
+  - name: SELinux
+    command: setsebool -P httpd_can_network_connect 1
+  - name: Restart Nginx
+    systemd:
+      state: restarted
+      name: nginx
