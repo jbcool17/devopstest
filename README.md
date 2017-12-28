@@ -20,6 +20,9 @@
 - 1 Nginx Web Server w/SSL & load balances docker containers(nginx - static sites)
 - docker containers all share the same volume - ```-v /var/www/portfolio:/usr/share/nginx/html"```
 
+## ansible-set-up-lbnginx-with-docker
+## ansible-set-up-lbhaproxy-with-docker
+
 ## Use
 - ```cd``` into folder and run ```vagrant up```
 - ex. ```cd LoadBalancer && vagrant up```
