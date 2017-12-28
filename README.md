@@ -5,16 +5,20 @@
 - Servers are setup using Ansible(v2.2.0)
 - Centos7/Nginx/Firewalld
 
-## Standalone Web Server
+## vagrant-standalone-webserver
 - Uses Nginx to host static website
 - Site is available from port 443(HTTPS) and is also setup to redirect when port 80(HTTP) is accessed
 
-## Load Balanced Web Server
+## vagrant-lb-webservers
 - 3 Nginx Web Servers host the same static site from port 80(HTTP)
 - Load Balancer
   - Uses an Nginx Reverse Proxy to balance between the 3 web servers
   - Handles the Self-Signed SSL Certificate for all servers
   - Site is available from port 443(HTTPS) and is also setup to redirect when port 80(HTTP) is accessed
+
+## vagrant-lb-with-docker
+- 1 Nginx Web Server w/SSL & load balances docker containers(nginx - static sites)
+- docker containers all share the same volume - ```-v /var/www/portfolio:/usr/share/nginx/html"```
 
 ## Use
 - ```cd``` into folder and run ```vagrant up```
