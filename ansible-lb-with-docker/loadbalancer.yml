@@ -2,9 +2,10 @@
 - name: Setup it up
   hosts: all
   vars:
-    vm_ip: 192.168.50.100
+    site_name: 192.168.50.100
   become: true
   roles:
     - common
     - loadbalancer
     - docker
+    - https

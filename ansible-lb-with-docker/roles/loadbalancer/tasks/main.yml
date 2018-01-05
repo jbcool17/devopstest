@@ -27,15 +27,13 @@
   - name: SSL Directory
     file: path=/etc/ssl/private state=directory owner=root group=root mode=700
   - name: Openssl
-    command: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt -subj "/C=US/ST=New York/L=New York/O=Global Security/OU=IT Department/CN={{ vm_ip }}"
+    command: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt -subj "/C=US/ST=New York/L=New York/O=Global Security/OU=IT Department/CN={{ site_name }}"
   - name: Dhparam
     command: openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
-  - copy: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=644
-    with_items:
-      - { src: './files/lb-configs/nginx.conf', dest: '/etc/nginx/nginx.conf'}
-      - { src: './files/lb-configs/http.conf', dest: '/etc/nginx/conf.d/http.conf'}
-      - { src: './files/lb-configs/https.conf', dest: '/etc/nginx/conf.d/https.conf'}
-      - { src: './files/lb-configs/upstream.conf', dest: '/etc/nginx/conf.d/upstream.conf'}
+  - template: src=./files/templates/nginx.j2 dest=/etc/nginx/nginx.conf owner=root group=root mode=0644
+  - template: src=./files/templates/http.j2 dest=/etc/nginx/conf.d/http.conf owner=root group=root mode=0644
+  - template: src=./files/templates/https.j2 dest=/etc/nginx/conf.d/https.conf owner=root group=root mode=0644
+  - template: src=./files/templates/upstream.j2 dest=/etc/nginx/conf.d/upstream.conf owner=root group=root mode=0644
   - name: Setup Site
     file: path=/var/www/portfolio state=directory owner=root group=root mode=755
   - copy:
